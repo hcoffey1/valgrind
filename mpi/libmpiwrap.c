@@ -278,8 +278,12 @@ static void showTy ( FILE* f, MPI_Datatype ty )
    else if (ty == MPI_LONG_INT)       fprintf(f,"LONG_INT");
    else if (ty == MPI_SHORT_INT)      fprintf(f,"SHORT_INT");
    else if (ty == MPI_2INT)           fprintf(f,"2INT");
+#  if defined(MPI_UB)
    else if (ty == MPI_UB)             fprintf(f,"UB");
+#  endif
+#  if defined(MPI_LB)
    else if (ty == MPI_LB)             fprintf(f,"LB");
+#  endif
 #  if defined(MPI_WCHAR)
    else if (ty == MPI_WCHAR)          fprintf(f,"WCHAR");
 #  endif
@@ -459,7 +463,9 @@ static long extentOfTy ( MPI_Datatype ty )
 {
    int      r;
    MPI_Aint n;
-   r = PMPI_Type_extent(ty, &n);
+   // r = PMPI_Type_extent(ty, &n);
+   MPI_Aint lb;
+   r = PMPI_Type_get_extent(ty, &lb, &n);
    assert(r == MPI_SUCCESS);
    return (long)n;
 }
@@ -733,8 +739,10 @@ void walk_type ( void(*f)(void*,long), char* base, MPI_Datatype ty )
          f(base + offsetof(Ty,loc), sizeof(int));
          return;
       }
+      #if defined(MPI_LB) && defined(MPI_UB)
       if (ty == MPI_LB || ty == MPI_UB)
          return; /* have zero size, so nothing needs to be done */
+      #endif
       goto unhandled;
       /*NOTREACHED*/
    }
