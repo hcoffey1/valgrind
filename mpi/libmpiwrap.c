@@ -278,12 +278,14 @@ static void showTy ( FILE* f, MPI_Datatype ty )
    else if (ty == MPI_LONG_INT)       fprintf(f,"LONG_INT");
    else if (ty == MPI_SHORT_INT)      fprintf(f,"SHORT_INT");
    else if (ty == MPI_2INT)           fprintf(f,"2INT");
+#if 0
 #  if defined(MPI_UB)
    else if (ty == MPI_UB)             fprintf(f,"UB");
 #  endif
 #  if defined(MPI_LB)
    else if (ty == MPI_LB)             fprintf(f,"LB");
 #  endif
+#endif
 #  if defined(MPI_WCHAR)
    else if (ty == MPI_WCHAR)          fprintf(f,"WCHAR");
 #  endif
@@ -354,21 +356,27 @@ static void showCombiner ( FILE* f, int combiner )
 #     endif
       case MPI_COMBINER_CONTIGUOUS:  fprintf(f, "CONTIGUOUS"); break;
       case MPI_COMBINER_VECTOR:      fprintf(f, "VECTOR"); break;
+#if 0
 #if   defined(MPI_COMBINER_HVECTOR_INTEGER)
       case MPI_COMBINER_HVECTOR_INTEGER: fprintf(f, "HVECTOR_INTEGER"); break;
 #     endif
+#endif
       case MPI_COMBINER_HVECTOR:     fprintf(f, "HVECTOR"); break;
       case MPI_COMBINER_INDEXED:     fprintf(f, "INDEXED"); break;
+#if 0
 #if   defined(MPI_COMBINER_HINDEXED_INTEGER)
       case MPI_COMBINER_HINDEXED_INTEGER: fprintf(f, "HINDEXED_INTEGER"); break;
 #     endif
+#endif
       case MPI_COMBINER_HINDEXED:    fprintf(f, "HINDEXED"); break;
 #if   defined(MPI_COMBINER_INDEXED_BLOCK)
       case MPI_COMBINER_INDEXED_BLOCK: fprintf(f, "INDEXED_BLOCK"); break;
 #     endif
+#if 0
 #if   defined(MPI_COMBINER_STRUCT_INTEGER)
       case MPI_COMBINER_STRUCT_INTEGER: fprintf(f, "STRUCT_INTEGER"); break;
 #     endif
+#endif
       case MPI_COMBINER_STRUCT:      fprintf(f, "STRUCT"); break;
 #if   defined(MPI_COMBINER_SUBARRAY)
       case MPI_COMBINER_SUBARRAY:    fprintf(f, "SUBARRAY"); break;
@@ -739,10 +747,12 @@ void walk_type ( void(*f)(void*,long), char* base, MPI_Datatype ty )
          f(base + offsetof(Ty,loc), sizeof(int));
          return;
       }
+#if 0
       #if defined(MPI_LB) && defined(MPI_UB)
       if (ty == MPI_LB || ty == MPI_UB)
          return; /* have zero size, so nothing needs to be done */
       #endif
+#endif
       goto unhandled;
       /*NOTREACHED*/
    }
